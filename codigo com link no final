@@ -1,0 +1,72 @@
+// C++ code
+//
+int LDR = 0;
+int soil_sensor = 0;
+void setup()
+{
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  Serial.begin(9600);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+}
+
+void loop()
+{
+  soil_sensor = analogRead(A0);
+  LDR = analogRead(A1);
+  armazenamento();
+}
+void armazenamento()
+{
+  int luz[10];
+  int umi[10];
+  for (int i = 0; i<10; i++){
+    soil_sensor = analogRead(A0);
+    LDR = analogRead(A1);
+    umi[i] = soil_sensor;
+    luz[i] = LDR;
+     if (soil_sensor < 100 && LDR > 500) {
+    digitalWrite(7, HIGH);
+    digitalWrite(8, HIGH);
+    digitalWrite(9, LOW);
+    digitalWrite(10, LOW);
+  } else {
+    if (soil_sensor > 100) {
+      digitalWrite(7, LOW);
+      digitalWrite(8, LOW);
+      digitalWrite(9, HIGH);
+      digitalWrite(10, LOW);
+    } else {
+      digitalWrite(7, LOW);
+      digitalWrite(8, LOW);
+      digitalWrite(9, LOW);
+      digitalWrite(10, HIGH);
+    }
+  }
+
+    delay(1000);
+  }
+   for (int i = 0; i<10; i++){
+    int u = i+1;
+    Serial.println("Instante: ");
+    Serial.println(u);
+    Serial.println("luz: ");
+    Serial.println(luz[i]);
+    Serial.println("umidade: ");
+    Serial.println(umi[i]);
+    if (umi[i] < 100 && luz[i] > 500) {
+    Serial.println("Solo Seco - Irrigando");
+  } else {
+    if (umi[i] > 100) {
+      Serial.println("Irrigacao Completa");
+    } else {
+      Serial.println("Luz Insuficiente");
+    }
+  }
+    Serial.println(" ");
+  }
+}
+// https://www.tinkercad.com/things/6k5ypdYmLZv-irrigacao-autonoma?sharecode=g-f9IPLGt2Dy0S15F448fD5y34uZ5nh8dQnDiKkz8eg
